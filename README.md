@@ -7,7 +7,7 @@ presentr: jQuery Plugin for Presentations
 # Usage
 Include presentr in your head
 <pre>
-<script type='text/javascript' src='js/jquery.presentr.min.js'></script>
+    &lt;script type='text/javascript' src='js/jquery.presentr.min.js'&gt;&lt;/script&gt;
 </pre>
 Set up your presentation by using a jQuery selector to select the class of the slides
 <pre>
@@ -27,8 +27,11 @@ $(function()    {
 * ``hashPrefix``: string that proceeds the slide in the hash (default: 'slide')
 
 # Features
-* Page Display: Specifying a pageDisplay jQuery object replaces the HTML of that object with the current slide number out of the total number of slides. Check out the [demo](http://www.jsantell.com/presentr) and see the big pink box in the upper right?
+* Page Display: Specifying a ``pageDisplay`` jQuery object replaces the HTML of that object with the current slide number out of the total number of slides. Check out the [demo](http://www.jsantell.com/presentr) and see the big pink box in the upper right?
 * Slide Jump: Setting ``hashJump`` to true will update the URL with a hash on every slide event. The prefix can be changed by setting ``hashPrefix`` to the string you'd like to use. Copy and pasting the URL with the hash will jump right to the slide.
 
 # More
 Start using it! Grab or fork it from here, or contact me ([Twitter](http://www.twitter.com/jsantell), [my site](http://jsantell.com)) if you have any feedback!
+
+# License
+The MIT License, Copyright &copy; 2011 Jordan Santell -- Collab, progress, victory
