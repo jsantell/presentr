@@ -1,6 +1,9 @@
-/* presentr
+/* presentr v1.0
  * jQuery Plugin for Presentations
- * Jordan Santell
+ * 
+ * Tested on jQuery 1.2.3 - 1.6.2
+ *
+ * The MIT License, Copyright (c) 2011 Jordan Santell, 
  * http://github.com/jsantell/presentr
  */
 
