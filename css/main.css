@@ -45,6 +45,24 @@ body    {
     z-index:15;
 }
 
+#author   {
+    position:fixed;
+    color:#888;
+    top:10px;
+    right:50px;
+}
+
+#links a {
+    color:#ff0077;
+}
+
+#links  {
+    position:fixed;
+    color:#888;
+    top: 30px;
+    right:50px;
+}
+
 h1  {
     color:#333;
     font-size:40pt;
