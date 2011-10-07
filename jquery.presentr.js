@@ -46,7 +46,7 @@
 
 
         function animateSlide(direction) {
-            if (!ableToSlide) { return false; }
+            if (!ableToSlide) return false;
             ableToSlide = false;
             $slides.each(function () {
                 var $obj = $(this),
@@ -55,7 +55,7 @@
 
                 $obj.animate({
                     left: newPosition
-                }, options.speed, 'swing', function() {
+                }, options.speed, 'swing', function () {
                     ableToSlide = true;
                 });
 
@@ -87,8 +87,8 @@
         }
 
         return (function init($selectedObjects) {
-            if (options.hashJump === true) initHashJump();
-            if (options.arrows === true) initArrowEvents();
+            if (options.hashJump) initHashJump();
+            if (options.arrows) initArrowEvents();
             
             $('body').css('overflow-x', 'hidden');
             
