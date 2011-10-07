@@ -3,160 +3,123 @@
  * 
  * Tested on jQuery 1.2.3 - 1.6.2
  *
- * The MIT License, Copyright (c) 2011 Jordan Santell, 
+ * The MIT License, Copyright (c) 2011 Jordan Santell 
  * http://github.com/jsantell/presentr
  */
 
-(function($)    {
+(function ($) {
 
+    $.fn.presentr = function (userSettings) {
 
-    $.fn.presentr = function(userSettings)  {
-
-
-        // Set up parameters and members
-        var options = $.extend({}, $.fn.presentr.defaults, userSettings),
+        var options = $.extend($.fn.presentr.defaults, userSettings),
             ableToSlide = true,
-            ArrowKey = {
-                left : 37,
-                right : 39
+            ARROWKEY = {
+                LEFT: 37,
+                RIGHT: 39
             },
             currentSlide = 1,
-            Direction = {
-                left : 0,
-                right : 1        
+            DIRECTION = {
+                LEFT: -1,
+                RIGHT: 1        
             },
             docLoc = document.location,
+            PARSE_CURRENTSLIDE = new RegExp('#' + options.hashPrefix +
+                '([0-9]+)'),
             PARSE_HASH = /(#[^ ]*)/,
-            PARSE_CURRENTSLIDE = new RegExp('#'+options.hashPrefix+'([0-9]+)'),
             screenWidth = $(window).width(),
-            slides = this,
-            timeout = null,
+            $slides = this,
             totalSlides = 0;
-        $('body').css('overflow','hidden');
 
+        /* Animation, Updates */        
 
-        // Updating page display
-        var updatePageDisplay = function()  {
-            if(options.pageDisplay !== null)    {
-                options.pageDisplay.html(currentSlide+'/'+totalSlides);
+        function updatePage() {
+            if (options.pageDisplay instanceof jQuery) {
+                options.pageDisplay.html(currentSlide + '/' + totalSlides);
+            }
+            if (options.hashJump) {
+                var hash = '#' + (options.hashPrefix + '') + (currentSlide + '');
+                docLoc.href = docLoc.hash
+                    ? docLoc.href.replace(PARSE_HASH, hash)
+                    : docLoc.href + hash;
             }
         }
 
 
-        var updateHashURL = function()  {
-            if(options.hashJump)    {
-                if(docLoc.hash)    {
-                    var newHash = '#' + options.hashPrefix + currentSlide;
-                    docLoc.href = docLoc.href.replace(PARSE_HASH, newHash);
-                }
-                else    {
-                    docLoc.href += '#' + options.hashPrefix + currentSlide;    
-                }
-            }
-
-        }
-
-    
-        // Event called when change slide input received
-        var traverseSlideEvent = function(e)  {
-            if(ableToSlide === true
-                && ((e.keyCode === ArrowKey.right && currentSlide < totalSlides)
-                || ( e.keyCode === ArrowKey.left  && currentSlide > 1)))   {
-                   controlDelay();
-                   changeSlide((e.keyCode === ArrowKey.right) ? Direction.right : Direction.left);
-            }
-        };
-
-
-        // Animates slide change forward or backwards
-        var changeSlide = function(direction)  {
-            screenWidth = $(window).width();
-            slides.each(function()    {
-                var shiftDirection = (direction === Direction.right) ? -1 : 1,
-                    obj = $(this);
-                currentPosition = obj.css('left');
-                newPosition = parseInt(currentPosition) + (screenWidth * shiftDirection);
-                obj.animate({
-                  left: newPosition
-                }, options.speed, 'swing');
-            });
-            (direction === Direction.right) ? currentSlide++ : currentSlide--;
-            updateHashURL();
-            updatePageDisplay();
-        };
-        
-
-        // Binds events handlers
-        var setArrowEvents = function()  {
-            window.addEventListener('keydown', traverseSlideEvent, true);
-        };
-
-
-        // If arrows are set to true (default), bind slide change to arrow keys
-        if(options.arrows === true) {
-            setArrowEvents();
-        }
-
-  
-        // Set delay (speed+100) to limit slide spam
-        var controlDelay = function()    {
+        function animateSlide(direction) {
+            if (!ableToSlide) { return false; }
             ableToSlide = false;
-            if(timeout) {
-                clearTimeout(timeout);
-            }
-            timeout = window.setTimeout(function () {
-                ableToSlide = true;
-            }, options.speed+100);
-        };                  
+            $slides.each(function () {
+                var $obj = $(this),
+                    currentPosition = parseInt($obj.css('left'), 10),
+                    newPosition = currentPosition - (screenWidth * direction);
 
+                $obj.animate({
+                    left: newPosition
+                }, options.speed, 'swing', function() {
+                    ableToSlide = true;
+                });
 
-        // If hash URL true and specified, jump to slide
-        var slideJump = function()  {
-            if(options.hashJump && PARSE_CURRENTSLIDE.test(docLoc.href))    {
-                var slideFromHash = docLoc.href.match(PARSE_CURRENTSLIDE)[1];
-                if(typeof currentSlide === 'number')    {
-                    currentSlide = slideFromHash;
+            });
+            currentSlide += direction;
+            updatePage();
+        }
+
+        /* Initializers */
+        
+        function initHashJump() {
+            if (PARSE_CURRENTSLIDE.test(docLoc.href)) {
+                var possibleSlide = ~~docLoc.href.match(PARSE_CURRENTSLIDE)[1];
+                if (possibleSlide && possibleSlide <= $slides.length) {
+                    currentSlide = possibleSlide;
                 }
             }
         }
-    
 
-        // Set up positions of slides
-        var initialize = function(selectedObjects) {
-
-            // Update currentSlide if hash found
-            slideJump();
-            
-            // Set up CSS for the slides
-            return selectedObjects.each(function() {
-                totalSlides++;
-                var obj = $(this),
-                    margin = (screenWidth - parseInt(obj.css('width'))) / 2;
-                    currentDiff = (currentSlide - totalSlides) * (-1);
-                    position  = (currentDiff * screenWidth) + margin;
-                obj.css('float','left');
-                obj.css('display','block');
-                obj.css('position','fixed');
-                obj.css('left',position);
-                updatePageDisplay();
+        function initArrowEvents() {
+            $(document).keydown(function (e) {
+                var key = e.which === null ? e.keyCode : e.which;
+                if (key === ARROWKEY.RIGHT && currentSlide < totalSlides) {
+                    animateSlide(DIRECTION.RIGHT);
+                } else if (key === ARROWKEY.LEFT && currentSlide > 1) {
+                    animateSlide(DIRECTION.LEFT);
+                }
             });
-        };
+        }
+
+        return (function init($selectedObjects) {
+            if (options.hashJump === true) initHashJump();
+            if (options.arrows === true) initArrowEvents();
+            
+            $('body').css('overflow-x', 'hidden');
+            
+            $selectedObjects.each(function () {
+                totalSlides++;
+                var $obj = $(this),
+                    margins = screenWidth - parseInt($obj.css('width'), 10),
+                    currentDiff = (totalSlides - currentSlide),
+                    position  = (currentDiff * screenWidth) + (margins / 2);
+                
+                $obj.css({
+                    'display': 'block',
+                    'position': 'fixed',
+                    'left': position
+                });
+            });
+            updatePage();
+            return $selectedObjects;
+        }($slides));
         
-
-        return initialize(this);
-
-
     };
 
-    
+    /* Public members */
+
     $.fn.presentr.defaults = {
         speed : 1000,
-        arrows : true,
+        arrows : true, // For future, non-keyboard inputs
         hashJump : true,
         hashPrefix : 'slide',
         pageDisplay : null
     };
 
-
-})(jQuery);
+}(jQuery));
 
