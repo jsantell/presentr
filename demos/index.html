@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>presentr demo: jQuery Plugin for Presentations</title>
+    <script type='text/javascript' src='js/jquery-1.6.2.min.js'></script>
+    <script type='text/javascript' src='../jquery.presentr.min.js'></script>-->
+    <link rel='stylesheet' type='text/css' href='css/main.css' media='screen'/>
+    <script type='text/javascript'>
+    $(function()    {
+        $('.slide').presentr({
+            speed: 500,
+            pageDisplay: $('#slideinfo'),
+            hashJump: true,
+            hashPrefix: 'slide'
+        });
+    });
+    </script>
+</head>
+<body>
+
+<div id='header'>
+    <h2 id='name'>presentr</h2>
+    <h3 id='title'>jQuery Plugin for Presentations</h3>
+    <div id='author'>developed by Jordan Santell</div>
+    <div id='links'><a href='http://www.twitter.com/jsantell' title='Jordan Santell on Twitter'>@jsantell</a> | <a href='http://www.github.com/jsantell/presentr' title='Jordan Santell on GitHub'>GitHub</a> | <a href='http://jsantell.com' title='Jordan Santell portfolio'>jsantell.com</a>
+    </div>
+</div>
+
+<div id='slideinfo'></div>
+
+
+<div class='slide'>
+    <h1>Presentr</h1>
+    <p><a href='http://github.com/jsantell/presentr' title='presentr on GitHub'>presentr</a> is <a href='http://jquery.com' title='jQuery'>jQuery</a> plugin designed to let you make a presentation in the browser <strong>fast</strong>.</p>
+
+    <p>So here's a little demo. Hit your <strong>right arrow key</strong> to begin!</p>
+</div>
+
+
+<div class='slide'>
+    <h1>Set Up: Include</h1>
+    <p>Include presentr in your head</p>
+    <pre><code>
+    <span class='orange'>&lt;script type=</span><span class='green'>'text/javascript'</span><span class='orange'> src=</span><span class='green'>'js/jquery.presentr.min.js'</span><span class='orange'>&gt;&lt;/script&gt;</span>
+    </code></pre>
+</div>
+
+
+<div class='slide'>
+    <h1>Set Up: Create</h1>
+    <p>Set up your presentation by using a jQuery selector to select the class of the slides</p>
+    <pre><code>
+    <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
+        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
+            speed: <span class='orange'>500</span>,
+            pageDisplay: <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slideinfo'</span><span class='blue'>)</span>,
+            hashJump: <span class='green'>true</span>,
+            hashPrefix: <span class='green'>'slide'</span>
+        <span class='blue'>})</span>;
+    <span class='blue'>})</span>;
+    </code></pre>
+    <ul>
+        <li><strong>speed:</strong> speed in ms of slide changes (default: 1000)</li>
+        <li><strong>pageDisplay:</strong> set this to the jQuery object(s) you'd like to update with frame info (default: null)</li>
+        <li><strong>hashJump:</strong> if you want the slides to update the URL and able to be linked to and snap (default: true)</li>
+        <li><strong>hashPrefix:</strong> string that proceeds the slide in the hash (default: 'slide')</li>
+    </ul>
+
+</div>
+
+
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+    <p>Specifying a <strong>pageDisplay</strong> jQuery object replaces the HTML of that object with the current slide number out of the total number of slides.</p>
+    <p>See the <strong>big pink box</strong> in the upper right?</p>
+</div>
+
+
+<div class='slide'>
+    <h1>Features: Slide Jump</h1>
+    <p>Setting <strong>hashJump</strong> to true will update the URL with a hash on every slide event. The prefix can be changed by setting <strong>hashPrefix</strong> to the string you'd like to use. In this demo, the prefix is just <strong>slide</strong>.</p>
+    <p>See the <strong>#slide5</strong> in the URL? Copy and paste the URL and <strong>presentr</strong> will snap right to that slide.</p>
+</div>
+
+
+<div class='slide'>
+    <h1>Start using presentr!</h1>
+    <p>Start using it! Grab or fork from <a href='http://www.github.com/jsantell/presentr' title='Presentr on GitHub'>GitHub</a>, or below!</p>
+    <p><a href='js/jquery.presentr.js' title='Full source code for Presentr'>presentr: full source</a></p>
+    <p><a href='js/jquery.presentr.min.js' title='Minimized presentr'>presentr: minimized</a></p>
+
+    <p>Contact me (<a href='http://twitter.com/jsantell' title='Jordan Santell on Twitter'>Twitter</a>, <a href='http://github/jsantell' title='Jordan Santell on GitHub'>GitHub</a>, <a href='http://jsantell.com/contact' title='Jordan Santell portfolio'>my site</a>) if you have any feedback!</p>
+
+</div>
+
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+<div class='slide'>
+    <h1>Features: Page Display</h1>
+</div>
+
+
+<script type='text/javascript'>
+/*    var time2 = null;
+    console.log(time2);
+    time2 = window.setTimeout(function(){ console.log('****************************');  }, 3000);
+    console.log(time2);
+*/
+</script>
+</body>
+</html>
