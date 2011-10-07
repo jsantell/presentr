@@ -12,7 +12,7 @@ Include presentr in your head
 <pre>
     &lt;script type='text/javascript' src='js/jquery.presentr.min.js'&gt;&lt;/script&gt;
 </pre>
-Set up your presentation by using a jQuery selector to select the class of the slides
+Create a jQuery object with the class of the slides and call the presentr method, passing in any (non-required) options:
 <pre>
 $(function()    {
     $('.slide').presentr({
