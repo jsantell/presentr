@@ -18,6 +18,7 @@
                 RIGHT: 39
             },
             currentSlide = 1,
+            currentSubSlide = 0,
             DIRECTION = {
                 LEFT: -1,
                 RIGHT: 1        
@@ -32,6 +33,46 @@
 
         /* Animation, Updates */        
 
+        function functionCalls(direction) {
+            var funcs = options.slideFunctions[currentSlide],
+                nextFuncs = options.slideFunctions[currentSlide + direction] || {},
+                enter = funcs ? funcs.start : null,
+                exit = funcs ? funcs.exit :null,
+                subslides = funcs ? funcs.subslides : [];
+            // If there are subslides...
+            if (direction === DIRECTION.RIGHT
+                && subslides
+                && currentSubSlide < subslides.length 
+                && typeof subslides[currentSubSlide] === 'function') {
+                subslides[currentSubSlide]();
+                currentSubSlide += 1;
+            } else { // Go to new slide if no subslides
+                if (exit)
+                    exit();
+                if (nextFuncs.enter && typeof nextFuncs.enter === 'function')
+                    nextFuncs.enter();
+                animateSlide(direction);
+            }
+        }
+
+        function animateSlide(direction) {
+            if (!ableToSlide) return false;
+            ableToSlide = false;
+            $slides.each(function () {
+                var $obj = $(this),
+                    currentPosition = parseInt($obj.css('left'), 10),
+                    newPosition = currentPosition - (screenWidth * direction);
+    
+                $obj.animate({
+                    left: newPosition
+                }, options.speed, 'swing', function () {
+                    ableToSlide = true;
+                });
+            });
+            currentSlide += direction;
+            updatePage();
+        }
+        
         function updatePage() {
             if (options.pageDisplay instanceof jQuery) {
                 options.pageDisplay.html(currentSlide + '/' + totalSlides);
@@ -42,27 +83,9 @@
                     ? docLoc.href.replace(PARSE_HASH, hash)
                     : docLoc.href + hash;
             }
+            currentSubSlide = 0;
         }
 
-
-        function animateSlide(direction) {
-            if (!ableToSlide) return false;
-            ableToSlide = false;
-            $slides.each(function () {
-                var $obj = $(this),
-                    currentPosition = parseInt($obj.css('left'), 10),
-                    newPosition = currentPosition - (screenWidth * direction);
-
-                $obj.animate({
-                    left: newPosition
-                }, options.speed, 'swing', function () {
-                    ableToSlide = true;
-                });
-
-            });
-            currentSlide += direction;
-            updatePage();
-        }
 
         /* Initializers */
         
@@ -79,9 +102,9 @@
             $(document).keydown(function (e) {
                 var key = e.which === null ? e.keyCode : e.which;
                 if (key === ARROWKEY.RIGHT && currentSlide < totalSlides) {
-                    animateSlide(DIRECTION.RIGHT);
+                    functionCalls(DIRECTION.RIGHT);
                 } else if (key === ARROWKEY.LEFT && currentSlide > 1) {
-                    animateSlide(DIRECTION.LEFT);
+                    functionCalls(DIRECTION.LEFT);
                 }
             });
         }
@@ -106,6 +129,9 @@
                 });
             });
             updatePage();
+            if (options.slideFunctions[currentSlide]
+                && typeof options.slideFunctions[currentSlide].enter === 'function')
+                options.slideFunctions[currentSlide].enter();
             return $selectedObjects;
         }($slides));
         
@@ -118,7 +144,8 @@
         arrows : true, // For future, non-keyboard inputs
         hashJump : true,
         hashPrefix : 'slide',
-        pageDisplay : null
+        pageDisplay : null,
+        slideFunctions: {}
     };
 
 }(jQuery));

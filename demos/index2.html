@@ -3,6 +3,8 @@
 <head>
     <title>presentr demo: jQuery Plugin for Presentations</title>
     <script type='text/javascript' src='js/jquery-1.6.2.min.js'></script>
+    <script type='text/javascript' src='js/d3.min.js'></script>
+    <script type='text/javascript' src='js/trig-d3.js'></script>
     <script type='text/javascript' src='../jquery.presentr.js'></script>
     <link rel='stylesheet' type='text/css' href='css/main.css' media='screen'/>
     <link rel='stylesheet' type='text/css' href='css/trig-d3.css' media='screen'/>
@@ -14,15 +16,23 @@
             hashJump: true,
             hashPrefix: 'slide',
             slideFunctions: {
-                '4': {
-                    enter: function() { $('.slide4elements').hide(); },
+                '2': {
+                    enter: function() { console.log('enter2') },
+                    exit: function() { console.log('exit2') }
+                },
+                '3': {
+                    enter: function() { console.log('enter3') },
+                    exit: function() { console.log('exit3') }
+                },
+                '6': {
+                    enter: function() { $('.slide6elements').hide(); },
                     subslides: [
                         function() { $('#bulletPoint1').fadeIn(); },
                         function() { $('#bulletPoint2').fadeIn(); },
                         function() { $('#bulletPoint3').fadeIn(); },
                         function() { $('#codeSnippet').fadeIn(); }
                     ],
-                    exit: function() { $('.slide4elements').hide(); }
+                    exit: function() { $('.slide6elements').hide(); }
                 },
                 '7': {
                     enter: DEMOS.trig.start,
@@ -87,14 +97,27 @@
 
 
 <div class='slide'>
+    <h1>Features: Page Display</h1>
+    <p>Specifying a <strong>pageDisplay</strong> jQuery object replaces the HTML of that object with the current slide number out of the total number of slides.</p>
+    <p>See the <strong>big pink box</strong> in the upper right?</p>
+</div>
+
+
+<div class='slide'>
+    <h1>Features: Slide Jump</h1>
+    <p>Setting <strong>hashJump</strong> to true will update the URL with a hash on every slide event. The prefix can be changed by setting <strong>hashPrefix</strong> to the string you'd like to use. In this demo, the prefix is just <strong>slide</strong>.</p>
+    <p>See the <strong>#slide5</strong> in the URL? Copy and paste the URL and <strong>presentr</strong> will snap right to that slide.</p>
+</div>
+
+<div class='slide'>
     <h1>Features: Subslide Functions</h1>
     <p>You know those powerpoints where the bullet points fade in?</p>
     <ul>
-        <li id='bulletPoint1' class='slide4elements'>That can be implemented too.</li>
-        <li id='bulletPoint2' class='slide4elements'>Just define an array with functions to be called sequentially.</li>
-        <li id='bulletPoint3' class='slide4elements'>Rock on.</li>
+        <li id='bulletPoint1' class='slide6elements'>That can be implemented too.</li>
+        <li id='bulletPoint2' class='slide6elements'>Just define an array with functions to be called sequentially.</li>
+        <li id='bulletPoint3' class='slide6elements'>Rock on.</li>
     </ul>    
-    <pre id='codeSnippet' class='slide4elements'><code>
+    <pre id='codeSnippet' class='slide6elements'><code>
     <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
         <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
             slideFunctions: <span class='blue'>{</span>
@@ -125,8 +148,8 @@
                         <span class='pink'>function</span><span class='blue'>() {</span> <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#bulletPoint3'</span><span class='blue'>)</span>.fadeIn() <span class='blue'>}</span>,
                         <span class='pink'>function</span><span class='blue'>() {</span> <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#codeSnippet'</span><span class='blue'>)</span>.fadeIn() <span class='blue'>}</span>,
                     <span class='blue'>]</span>,
-                    enter: <span class='pink'>function</span><span class='blue'>() {</span> <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide4elements'</span><span class='blue'>)</span>.hide() <span class='blue'>}</span>,
-                    exit: <span class='pink'>function</span><span class='blue'>() {</span> <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide4elements'</span><span class='blue'>)</span>.hide() <span class='blue'>}</span>
+                    enter: <span class='pink'>function</span><span class='blue'>() {</span> <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide6elements'</span><span class='blue'>)</span>.hide() <span class='blue'>}</span>,
+                    exit: <span class='pink'>function</span><span class='blue'>() {</span> <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide6elements'</span><span class='blue'>)</span>.hide() <span class='blue'>}</span>
                 <span class='blue'>}</span>
             <span class='blue'>}</span>
         <span class='blue'>})</span>;
@@ -135,12 +158,12 @@
 
 <div class='slide'>
     <h1>Features: Enter/Exit Functions</h1>
-    <p>With the ability to call functions upon entering and leaving a slide, you can set up cool WebGL or canvas demos that are executed only when currently viewing:</p>
+    <p>With the ability to call functions upon entering and leaving a slide, you can set up cool WebGL or canvas demos that only are executed when currently viewing:</p>
     <pre><code>
     <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
         <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
             slideFunctions: <span class='blue'>{</span>
-                <span class='green'>'9'</span>: <span class='blue'>{</span>
+                <span class='green'>'8'</span>: <span class='blue'>{</span>
                     enter: DEMOS.trig.start,
                     exit: DEMOS.trig.stop
                 <span class='blue'>}</span>  
@@ -148,27 +171,13 @@
         <span class='blue'>})</span>;
     <span class='blue'>})</span>;
     </code></pre>
-    <p>In the previous examples, anonymous functions were used, but other functions work just fine.</p>
 </div>
 
 <div class='slide'>
     <h1>Humble Software Trig Demo</h1>
-    <p>This animation is played only when first entering the slide. When leaving the slide, the drawing to canvas stops. Go to the next slide and notice <strong>t</strong> not increasing.</p>
+    <p>This animation is constructed and played only when first entering the slide. When leaving the slide, the animation stops.</p>
     <div id='trig'></div>
     <p><a href='http://www.humblesoftware.com/demos/trig_d3' title='Humble Software'>Trig demo using D3 by Humble Software</a></p>
-</div>
-
-<div class='slide'>
-    <h1>Features: Page Display</h1>
-    <p>Specifying a <strong>pageDisplay</strong> jQuery object replaces the HTML of that object with the current slide number out of the total number of slides.</p>
-    <p>See the <strong>big pink box</strong> in the upper right?</p>
-</div>
-
-
-<div class='slide'>
-    <h1>Features: Slide Jump</h1>
-    <p>Setting <strong>hashJump</strong> to true will update the URL with a hash on every slide event. The prefix can be changed by setting <strong>hashPrefix</strong> to the string you'd like to use. In this demo, the prefix is just <strong>slide</strong>.</p>
-    <p>See the <strong>#slide5</strong> in the URL? Copy and paste the URL and <strong>presentr</strong> will snap right to that slide.</p>
 </div>
 
 <div class='slide'>
@@ -179,8 +188,6 @@
 
     <p>Contact me (<a href='http://twitter.com/jsantell' title='Jordan Santell on Twitter'>Twitter</a>, <a href='http://github/jsantell' title='Jordan Santell on GitHub'>GitHub</a>, <a href='http://jsantell.com/contact' title='Jordan Santell portfolio'>my site</a>) if you have any feedback!</p>
 
-<script type='text/javascript' src='js/d3.min.js'></script>
-<script type='text/javascript' src='js/trig-d3.js'></script>
 </div>
 </body>
 </html>

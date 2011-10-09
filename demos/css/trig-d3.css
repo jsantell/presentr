@@ -1,0 +1,20 @@
+#trig {
+  margin: 20px;
+}
+.trig path,
+.trig circle,
+.trig line {
+  stroke: steelblue;
+  stroke-width: 2px;
+  fill: none;
+}
+
+.trig .axis {
+  stroke: #999;
+}
+
+.trig text {
+  fill: #444;
+  font-family: sans-serif;
+  font-size: 22;
+}
