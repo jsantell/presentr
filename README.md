@@ -15,7 +15,7 @@ Include presentr in your head
 Create a jQuery object with the class of the slides and call the presentr method, passing in any (non-required) options:
 <pre>
 $(function()    {
-    $('.slide').presentr({
+    $('#slides').presentr({
         speed: 500,
         pageDisplay: $('#slideinfo'),
         hashJump: true,
@@ -24,17 +24,14 @@ $(function()    {
 });
 </pre>
 # Options
-* ``speed``: speed in ms of slide changes (default: 1000)
-* ``pageDisplay``: set this to the jQuery object(s) you'd like to update with frame info (default: null)
-* ``hashJump``: if you want the slides to update the URL and able to be linked to and snap (default: true)
-* ``hashPrefix``: string that proceeds the slide in the hash (default: 'slide')
+* ``speed``: Speed in ms of slide changes (default: 1000)
+* ``pageDisplay``: Set this to the jQuery collection you'd like to update with frame info (default: null)
+* ``hashJump``: If you want the slides to update the URL and able to be linked to and snap (default: true)
+* ``hashPrefix``: String that proceeds the slide in the hash (default: 'slide')
 * ``slideFunctions``: Object that stores information on functions to be called during slide enter, exit, and during slides. More info in features.
-
-# Features
-* Page Display: Specifying a ``pageDisplay`` jQuery object replaces the HTML of that object with the current slide number out of the total number of slides. Check out the [demo](http://www.jsantell.com/presentr) and see the big pink box in the upper right?
-* Slide Jump: Setting ``hashJump`` to true will update the URL with a hash on every slide event. The prefix can be changed by setting ``hashPrefix`` to the string you'd like to use. Copy and pasting the URL with the hash will jump right to the slide.
-* Slide Functions: ``slideFunctions`` is an object with slide numbers as its keys and objects with three available methods as its value: ``enter``, ``exit``, and ``subslides``. ``enter`` and ``exit`` accepts a function to be called when entering or exiting a slide, respectively, while ``subslides`` is an array of functions to be called sequentially when progressing through an individual slide. In the demo, slide 4 has four elements fading in, and hidden on enter and exit. Slide 7 starts the trig demo upon enter, and stops it upon exit.
-
+* ``onSlide``: Callback function on slide change (default: noop)
+* ``onSubslide``: Callback function on subslide change (default: noop)
+* ``slideFunctions``: Object containing enter, exit and subslide functions. (default: {})
 <pre>
     slideFunctions: {
         '4': {
@@ -53,6 +50,26 @@ $(function()    {
         }
     }              
 </pre>
+
+# Events
+* ``slide.presentr``: This event is triggered on slide change
+<pre>
+    $('#slides').bind('slide.presentr', function(e, slide, direction) {
+        ...
+    });
+</pre>
+* ``subslide.presentr``: This event is triggered on subslide change
+<pre>
+    $('#slides').bind('subslide.presentr', function(e, slide) {
+        ...
+    });
+</pre>
+
+# Features
+* Page Display: Specifying a ``pageDisplay`` jQuery object replaces the HTML of that object with the current slide number out of the total number of slides. Check out the [demo](http://www.jsantell.com/presentr) and see the big pink box in the upper right?
+* Slide Jump: Setting ``hashJump`` to true will update the URL with a hash on every slide event. The prefix can be changed by setting ``hashPrefix`` to the string you'd like to use. Copy and pasting the URL with the hash will jump right to the slide.
+* Slide Functions: ``slideFunctions`` is an object with slide numbers as its keys and objects with three available methods as its value: ``enter``, ``exit``, and ``subslides``. ``enter`` and ``exit`` accepts a function to be called when entering or exiting a slide, respectively, while ``subslides`` is an array of functions to be called sequentially when progressing through an individual slide. In the demo, slide 4 has four elements fading in, and hidden on enter and exit. Slide 7 starts the trig demo upon enter, and stops it upon exit.
+
 
 # Compatability
 

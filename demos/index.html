@@ -79,10 +79,10 @@
 
 <div class='slide'>
     <h1>Set Up: Create</h1>
-    <p>Set up your presentation by using a jQuery selector to select the class of the slides</p>
+    <p>Set up your presentation by using a jQuery selector to select the element who is the parent of the slides</p>
     <pre><code>
     <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
-        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
+        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
             speed: <span class='orange'>500</span>,
             pageDisplay: <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slideinfo'</span><span class='blue'>)</span>,
             hashJump: <span class='green'>true</span>,
@@ -149,7 +149,7 @@
 
 <div class='slide'>
     <h1>Features: Enter/Exit Functions</h1>
-    <p>With the ability to call functions upon entering and leaving a slide, you can set up cool WebGL or canvas demos that are executed only when currently viewing:</p>
+    <p>With the ability to call functions upon entering and leaving a slide, you can set up awesome WebGL or canvas demos that are executed only when currently viewing:</p>
     <pre><code>
     <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
         <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
@@ -173,6 +173,19 @@
 </div>
 
 <div class='slide'>
+    <h1>Features: Events</h1>
+    <p>You can also specify a callback function on init to be called <strong>onSlide</strong> change or <strong>onSubslide</strong> change. Additionally, you can bind to these events.</p>
+    <pre><code>
+    <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.bind<span class='blue'>(</span><span class='green'>'slide.presentr'</span>, <span class='pink'>function</span><span class='blue'>(</span>e, currentslide, direction<span class='blue'>) {</span>
+        ...
+    <span class='blue'>})</span>;
+    <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.bind<span class='blue'>(</span><span class='green'>'subslide.presentr'</span>, <span class='pink'>function</span><span class='blue'>(</span>e, currentslide<span class='blue'>) {</span>
+        ...
+    <span class='blue'>})</span>;
+    </code></pre>
+</div>
+
+<div class='slide'>
     <h1>Features: Page Display</h1>
     <p>Specifying a <strong>pageDisplay</strong> jQuery object replaces the HTML of that object with the current slide number out of the total number of slides.</p>
     <p>See the <strong>big pink box</strong> in the upper right?</p>
@@ -182,7 +195,7 @@
 <div class='slide'>
     <h1>Features: Slide Jump</h1>
     <p>Setting <strong>hashJump</strong> to true will update the URL with a hash on every slide event. The prefix can be changed by setting <strong>hashPrefix</strong> to the string you'd like to use. In this demo, the prefix is just <strong>slide</strong>.</p>
-    <p>See the <strong>#slide5</strong> in the URL? Copy and paste the URL and <strong>presentr</strong> will snap right to that slide.</p>
+    <p>See the <strong>#slide10</strong> in the URL? Copy and paste the URL and <strong>presentr</strong> will snap right to that slide.</p>
 </div>
 
 <div class='slide'>
