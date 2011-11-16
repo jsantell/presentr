@@ -7,61 +7,63 @@
  * http://github.com/jsantell/presentr
  */
 
-(function ($) {
+;(function ($) {
 
     $.fn.presentr = function (userSettings) {
 
-        var options = $.extend($.fn.presentr.defaults, userSettings),
-            ableToSlide = true,
-            ARROWKEY = {
-                LEFT: 37,
-                RIGHT: 39
-            },
-            currentSlide = 1,
-            currentSubSlide = 0,
-            DIRECTION = {
-                LEFT: -1,
-                RIGHT: 1        
-            },
-            docLoc = document.location,
-            PARSE_CURRENTSLIDE = new RegExp('#' + options.hashPrefix +
-                '([0-9]+)'),
-            PARSE_HASH = /(#[^ ]*)/,
-            screenWidth = $(window).width(),
-            $slides = this,
-            totalSlides = 0;
+        var options         = $.extend( $.fn.presentr.defaults, userSettings ),
+            ableToSlide     = true,
+            currentSlide    = 1,
+            currentSubslide = 0,
+            totalSlides     = 0,
+            screenWidth     = $( window ).width(),
+            $slideCntl      = this,
+            $slides         = $slideCntl.children(),
+            URL             = window.location,
+            DIR = { LEFT: -1, RIGHT: 1 },
+            KEY = { LEFT: 37, RIGHT: 39 };
 
-        /* Animation, Updates */        
+        /* Events */
 
-        function functionCalls(direction) {
-            var funcs = options.slideFunctions[currentSlide],
-                nextFuncs = options.slideFunctions[currentSlide + direction] || {},
-                enter = funcs ? funcs.start : null,
-                exit = funcs ? funcs.exit :null,
-                subslides = funcs ? funcs.subslides : [];
+        function functionCalls( dir ) {
+            var sFuncs    = options.slideFunctions,
+                thisFuncs = sFuncs[ currentSlide ]       || {},
+                nextFuncs = sFuncs[ currentSlide + dir ] || {},
+                subslides = thisFuncs.subslides          || [],
+                nextEnter = $.isFunction(nextFuncs.enter) ? nextFuncs.enter : null,
+                thisExit  = $.isFunction(thisFuncs.exit)  ? thisFuncs.exit  : null;
             // If there are subslides...
-            if (direction === DIRECTION.RIGHT
-                && subslides
-                && currentSubSlide < subslides.length 
-                && typeof subslides[currentSubSlide] === 'function') {
-                subslides[currentSubSlide]();
-                currentSubSlide += 1;
+            if ( dir === DIR.RIGHT && currentSubslide < subslides.length &&
+                    $.isFunction(subslides[ currentSubslide ]) ) {
+                subslides[ currentSubslide ]();
+                currentSubslide++;
+                triggerSubslide();
             } else { // Go to new slide if no subslides
-                if (exit)
-                    exit();
-                if (nextFuncs.enter && typeof nextFuncs.enter === 'function')
-                    nextFuncs.enter();
-                animateSlide(direction);
+                if ( thisExit ) { thisExit(); }
+                if ( nextEnter ) { nextEnter(); }
+                animateSlide( dir );
             }
         }
+        
+        function triggerSlide( dir ) {
+            $slideCntl.trigger( 'slide.presentr', [ currentSlide, dir ] );
+            options.onSlide();
+        }
 
-        function animateSlide(direction) {
-            if (!ableToSlide) return false;
+        function triggerSubslide() {
+            $slideCntl.trigger( 'subslide.presentr', [ currentSubslide ] );
+            options.onSubslide();
+        }
+        
+        /* Animation, Updates */
+
+        function animateSlide( dir ) {
+            if ( !ableToSlide ) { return false; }
             ableToSlide = false;
-            $slides.each(function () {
-                var $obj = $(this),
-                    currentPosition = parseInt($obj.css('left'), 10),
-                    newPosition = currentPosition - (screenWidth * direction);
+             $slides.each(function () {
+                var $obj = $( this ),
+                    currentPosition = parseInt( $obj.css( 'left' ), 10 ),
+                    newPosition = currentPosition - ( screenWidth * dir );
     
                 $obj.animate({
                     left: newPosition
@@ -69,84 +71,86 @@
                     ableToSlide = true;
                 });
             });
-            currentSlide += direction;
+            currentSlide += dir;
+            triggerSlide(dir);
             updatePage();
         }
         
         function updatePage() {
-            if (options.pageDisplay instanceof jQuery) {
-                options.pageDisplay.html(currentSlide + '/' + totalSlides);
+            var hash;
+            if ( options.pageDisplay instanceof jQuery ) {
+                options.pageDisplay.html( currentSlide + '/' + totalSlides );
             }
-            if (options.hashJump) {
-                var hash = '#' + (options.hashPrefix + '') + (currentSlide + '');
-                docLoc.href = docLoc.hash
-                    ? docLoc.href.replace(PARSE_HASH, hash)
-                    : docLoc.href + hash;
+            if ( options.hashJump ) {
+                hash = '#' + options.hashPrefix + currentSlide;
+                URL.href = URL.hash ? URL.href.replace( /(#[^ ]*)/, hash ) : URL.href + hash;
             }
-            currentSubSlide = 0;
+            currentSubslide = 0;
         }
 
-
         /* Initializers */
-        
+
         function initHashJump() {
-            if (PARSE_CURRENTSLIDE.test(docLoc.href)) {
-                var possibleSlide = ~~docLoc.href.match(PARSE_CURRENTSLIDE)[1];
-                if (possibleSlide && possibleSlide <= $slides.length) {
-                    currentSlide = possibleSlide;
-                }
+            var regex = new RegExp( '#' + options.hashPrefix + '([0-9]+)' ),
+                parsedSlide = URL.href.match( regex );
+            if ( parsedSlide && parsedSlide[ 1 ] <= $slides.length ) {
+                currentSlide = ~~parsedSlide[ 1 ];
             }
         }
 
         function initArrowEvents() {
-            $(document).keydown(function (e) {
+            $( document ).keydown(function ( e ) {
                 var key = e.which === null ? e.keyCode : e.which;
-                if (key === ARROWKEY.RIGHT && currentSlide < totalSlides) {
-                    functionCalls(DIRECTION.RIGHT);
-                } else if (key === ARROWKEY.LEFT && currentSlide > 1) {
-                    functionCalls(DIRECTION.LEFT);
+                if (key === KEY.RIGHT && currentSlide < totalSlides) {
+                    functionCalls( DIR.RIGHT );
+                } else if ( key === KEY.LEFT && currentSlide > 1 ) {
+                    functionCalls( DIR.LEFT );
                 }
             });
         }
 
-        return (function init($selectedObjects) {
-            if (options.hashJump) initHashJump();
-            if (options.arrows) initArrowEvents();
+        return (function init() {
+            var sFuncs = options.slideFunctions;
+            if ( options.hashJump ) { initHashJump();    }
+            if ( options.arrows   ) { initArrowEvents(); }
             
-            $('body').css('overflow-x', 'hidden');
+            $( 'body' ).css( 'overflow-x', 'hidden' );
             
-            $selectedObjects.each(function () {
+            $slides.each(function () {
                 totalSlides++;
-                var $obj = $(this),
-                    margins = screenWidth - parseInt($obj.css('width'), 10),
-                    currentDiff = (totalSlides - currentSlide),
-                    position  = (currentDiff * screenWidth) + (margins / 2);
+                var $obj = $( this ),
+                    margins = screenWidth - parseInt( $obj.css( 'width' ), 10 ),
+                    currentDiff = totalSlides - currentSlide,
+                    position  = ( currentDiff * screenWidth ) + ( margins / 2 );
                 
                 $obj.css({
-                    'display': 'block',
+                    'display' : 'block',
                     'position': 'fixed',
-                    'left': position
+                    'left'    : position,
                 });
             });
+
             updatePage();
-            if (options.slideFunctions[currentSlide]
-                && typeof options.slideFunctions[currentSlide].enter === 'function')
-                options.slideFunctions[currentSlide].enter();
-            return $selectedObjects;
-        }($slides));
-        
+
+            if ( sFuncs[ currentSlide ] && $.isFunction(sFuncs[ currentSlide ].enter) ) {
+                sFuncs[ currentSlide ].enter();
+            }
+            return $slideCntl;
+        }());
     };
 
     /* Public members */
 
     $.fn.presentr.defaults = {
-        speed : 1000,
-        arrows : true, // For future, non-keyboard inputs
-        hashJump : true,
-        hashPrefix : 'slide',
-        pageDisplay : null,
-        slideFunctions: {}
+        arrows        : true, // For future, non-keyboard inputs
+        hashJump      : true,
+        hashPrefix    : 'slide',
+        onSlide       : function() { },
+        onSubslide    : function() { },
+        pageDisplay   : null,
+        slideFunctions: {},
+        speed         : 1000
     };
 
-}(jQuery));
+}( jQuery ));
 
