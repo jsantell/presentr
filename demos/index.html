@@ -110,7 +110,7 @@
     </ul>    
     <pre id='codeSnippet' class='slide4elements'><code>
     <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
-        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
+        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
             slideFunctions: <span class='blue'>{</span>
                 <span class='green'>'4'</span>: <span class='blue'>{</span>
                     subslides: <span class='blue'>[</span>
@@ -130,7 +130,7 @@
     <p>You can also specify functions that get called on slide enter and exit. Go back to the previous slide and notice the elements that were fading in are once again hidden.</p>
     <pre><code>
     <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
-        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
+        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
             slideFunctions: <span class='blue'>{</span>
                 <span class='green'>'4'</span>: <span class='blue'>{</span>
                     subslides: <span class='blue'>[</span>
@@ -152,7 +152,7 @@
     <p>With the ability to call functions upon entering and leaving a slide, you can set up awesome WebGL or canvas demos that are executed only when currently viewing:</p>
     <pre><code>
     <span class='pink'>$</span><span class='blue'>(</span><span class='pink'>function</span><span class='blue'>()    {</span>
-        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'.slide'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
+        <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.presentr<span class='blue'>({</span>
             slideFunctions: <span class='blue'>{</span>
                 <span class='green'>'9'</span>: <span class='blue'>{</span>
                     enter: DEMOS.trig.start,
@@ -174,14 +174,15 @@
 
 <div class='slide'>
     <h1>Features: Events</h1>
-    <p>You can also specify a callback function on init to be called <strong>onSlide</strong> change or <strong>onSubslide</strong> change. Additionally, you can bind to these events.</p>
+    <p>You can also specify a callback function on init to be called <strong>onSlide</strong> change or <strong>onSubslide</strong> change. Additionally, you can bind to these events. Open up your console and check out what these events were doing.</p>
     <pre><code>
-    <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.bind<span class='blue'>(</span><span class='green'>'slide.presentr'</span>, <span class='pink'>function</span><span class='blue'>(</span>e, currentslide, direction<span class='blue'>) {</span>
-        ...
-    <span class='blue'>})</span>;
-    <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>.bind<span class='blue'>(</span><span class='green'>'subslide.presentr'</span>, <span class='pink'>function</span><span class='blue'>(</span>e, currentslide<span class='blue'>) {</span>
-        ...
-    <span class='blue'>})</span>;
+    <span class='pink'>$</span><span class='blue'>(</span><span class='green'>'#slides'</span><span class='blue'>)</span>
+        .bind<span class='blue'>(</span><span class='green'>'slide.presentr'</span>, <span class='pink'>function</span><span class='blue'>(</span>e, currentslide, direction<span class='blue'>) {</span>
+            ...
+        <span class='blue'>})</span>
+        .bind<span class='blue'>(</span><span class='green'>'subslide.presentr'</span>, <span class='pink'>function</span><span class='blue'>(</span>e, currentslide<span class='blue'>) {</span>
+            ...
+        <span class='blue'>})</span>;
     </code></pre>
 </div>
 
