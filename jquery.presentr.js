@@ -126,7 +126,7 @@
                 $obj.css({
                     'display' : 'block',
                     'position': 'fixed',
-                    'left'    : position,
+                    'left'    : position
                 });
             });
 
