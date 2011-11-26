@@ -9,7 +9,7 @@
 
 ;(function ($) {
 
-    $.fn.presentr = function (userSettings) {
+    $.fn.presentr = function ( userSettings ) {
 
         var options         = $.extend( $.fn.presentr.defaults, userSettings ),
             ableToSlide     = true,
@@ -29,18 +29,16 @@
             var sFuncs    = options.slideFunctions,
                 thisFuncs = sFuncs[ currentSlide ]       || {},
                 nextFuncs = sFuncs[ currentSlide + dir ] || {},
-                subslides = thisFuncs.subslides          || [],
-                nextEnter = $.isFunction(nextFuncs.enter) ? nextFuncs.enter : null,
-                thisExit  = $.isFunction(thisFuncs.exit)  ? thisFuncs.exit  : null;
-            // If there are subslides...
+                subslides = thisFuncs.subslides          || [];
+            // If there are subslides, call the related functions if they exist
             if ( dir === DIR.RIGHT && currentSubslide < subslides.length &&
                     $.isFunction(subslides[ currentSubslide ]) ) {
                 subslides[ currentSubslide ]();
                 currentSubslide++;
                 triggerSubslide();
             } else { // Go to new slide if no subslides
-                if ( thisExit ) { thisExit(); }
-                if ( nextEnter ) { nextEnter(); }
+                if ( $.isFunction(thisFuncs.exit) ) { thisFuncs.exit(); }
+                if ( $.isFunction(nextFuncs.enter) ) { nextFuncs.enter(); }
                 animateSlide( dir );
             }
         }
@@ -72,7 +70,7 @@
                 });
             });
             currentSlide += dir;
-            triggerSlide(dir);
+            triggerSlide( dir );
             updatePage();
         }
         
@@ -111,8 +109,8 @@
 
         return (function init() {
             var sFuncs = options.slideFunctions;
-            if ( options.hashJump ) { initHashJump();    }
-            if ( options.arrows   ) { initArrowEvents(); }
+            if ( options.hashJump ) { initHashJump(); }
+            if ( options.arrows ) { initArrowEvents(); }
             
             $( 'body' ).css( 'overflow-x', 'hidden' );
             
